@@ -1,4 +1,5 @@
+.gitignore
 .idea/*
 .assets/*
-venv
-.gitignore
+venv/*
+_*

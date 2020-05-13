@@ -50,11 +50,15 @@ class Minesweeper:
         print("--" * self.width + "-")
 
     def is_mine(self, cell):
+        # true if board cell is true
+        print(cell)
         (i, j) = cell
+        print("hhieeer")
+        print(i)
+        print(j)
+
         return self.board[i][j]
         #TypeError: cannot unpack non-iterable method object
-
-        # return self.board[cell[0]][cell[1]]
 
 
     def nearby_mines(self, cell):
@@ -273,15 +277,17 @@ class MinesweeperAI:
 
         for height in range(8):
             for width in range(8):
-                move: Tuple[int, int] = (height, width)
+                move = (height, width)
                 if move not in self.mines and move in self.safes:
+                    # print(move)
                     temporary_board.append(move)
+        print(temporary_board)
 
         if temporary_board:
             random_index = random.choice(range(len(temporary_board)))
             return temporary_board[random_index]
-        else:
-            return None
+        # else:
+        #     return None
 
     def make_random_move(self):
         """
@@ -293,6 +299,7 @@ class MinesweeperAI:
         while True:
             random_height = random.randint(0, 7)
             random_width = random.randint(0, 7)
-            move: Tuple[int, int] = (random_height, random_width)
+            move = (random_height, random_width)
+            print(move)
             if move not in self.moves_made and not move in self.mines:
                 return move
