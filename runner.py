@@ -180,9 +180,7 @@ while True:
 
         # If AI button clicked, make an AI move
         if aiButton.collidepoint(mouse) and not lost:
-            move = ai.make_safe_move
-            print("move")
-            print(move)
+            move = ai.make_safe_move()
             if move is None:
                 move = ai.make_random_move()
                 if move is None:
@@ -220,6 +218,7 @@ while True:
             nearby = game.nearby_mines(move)
             # nearby is the number of mines within one row/one column
             revealed.add(move) # track of revealed cells in runner.py
+            print(revealed)
             ai.add_knowledge(move, nearby)
 
     pygame.display.flip()
