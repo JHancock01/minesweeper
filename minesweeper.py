@@ -147,8 +147,8 @@ class Sentence:
         a cell is known to be safe.
         """
         # if abc = 2 and a = 0 the ab =2
-
-        self.cells.remove(cell)
+        if not self.is_literal():
+            self.cells.remove(cell)
 
 
 class MinesweeperAI:
@@ -167,6 +167,7 @@ class MinesweeperAI:
 
         # Keep track of cells known to be safe or mines
         self.mines = set()
+        # self.mines = {(0,4),(7,7)}
         self.safes = set()
 
         # List of sentences about the game known to be true
@@ -189,12 +190,12 @@ class MinesweeperAI:
             if cell in list(sentence.cells):
                 sentence.mark_mine(cell)
 
-
     def mark_safe(self, cell):
         """
         Marks a cell as safe, and updates all knowledge
         to mark that cell as safe as well.
         """
+
         self.safes.add(cell)
         for sentence in self.knowledge:
             if cell in list(sentence.cells):
@@ -215,37 +216,37 @@ class MinesweeperAI:
         return neighbors
 
     def resolve(self, sentence):
-        # all cells in sentence are safe
-
+        # initialize new_sentence_list with the list to be resolved
+        print(sentence)
         new_sentences_list = [sentence]
 
-        # all cells are safe if count is 0
-        if sentence.count == 0:
-            for cell in list(sentence.cells):
-                self.mark_safe(cell)
+        # loop knowledge to infer more knowledge
+        for knowledge in self.knowledge:
+            # print(knowledge)
+            # if sentence.cells != knowledge.cells and knowledge.cells:  # don't resolve what's already there
+            if sentence.cells.issubset(knowledge.cells):    # sentence.cells {a,b}, 2 knowledge.cells{a,b,c,d}, 4
+                new_sentences_list.append(Sentence(knowledge.cells - sentence.cells, knowledge.count - sentence.count))
 
-        # all cells in sentence are mines if len == count
-        elif len(sentence.cells) == sentence.count:
-            for cell in list(sentence.cells):
-                self.mark_mine(cell)
-        else:
+            elif sentence.cells.issuperset(knowledge.cells):  # sentences.cells {a,b,c,d} knowledge {c,d}
+                new_sentences_list.append(Sentence(sentence.cells - knowledge.cells, sentence.count - knowledge.count))
 
-            for knowledge in self.knowledge:
-                # print(knowledge)
-                if sentence.cells != knowledge.cells:
-                    if sentence.cells.issubset(knowledge.cells):    # sentence.cells {a,b}, 2 knowledge.cells{a,b,c,d}, 4
-                        new_sentences_list.append(Sentence(knowledge.cells - sentence.cells, knowledge.count - sentence.count))
+        # loop the sentences to be added to infer knowledge from safes, and mines
+        for new_sentence in new_sentences_list:
+            # all cells are safe
 
-                    elif sentence.cells.issuperset(knowledge.cells):  # sentences.cells {a,b,c,d} knowledge {c,d}
-                        new_sentences_list.append(Sentence(sentence.cells - knowledge.cells, sentence.count - knowledge.count))
+            print("CELLS LENGHTH == %d" % len(new_sentence.cells))
 
+            if new_sentence.count == 0:
+                for cell in list(new_sentence.cells):
+                    self.mark_safe(cell)
+                        # all cells in sentence are mines if len == count
+            elif len(new_sentence.cells) == new_sentence.count:
+                for cell in list(new_sentence.cells):
+                    self.mark_mine(cell)
 
-                #
-            for new_sentence in new_sentences_list:
-                if sentence.cells != set():
-                    print("new knowledge add/inferred: ")
-                    print(new_sentence)
-                    self.knowledge.append(new_sentence)
+            print("new knowledge added/inferred: ")
+            print(new_sentence)
+            self.knowledge.append(new_sentence)
 
         print("knowledge: ")
         self.print_knowledge()
@@ -253,7 +254,6 @@ class MinesweeperAI:
         print(self.safes)
         print("mines")
         print(self.mines)
-
 
     def add_knowledge(self, cell, count):
         """
@@ -292,6 +292,14 @@ class MinesweeperAI:
         # resolve sentence
         self.resolve(new_sentence)
 
+    def possible_moves(self):
+        possible_moves = []
+        for height in range(8):
+            for width in range(8):
+                move = (height, width)
+                possible_moves.append(move)
+        return possible_moves
+
     def make_safe_move(self):
         """
         Returns a safe cell to choose on the Minesweeper board.
@@ -301,22 +309,24 @@ class MinesweeperAI:
         This function may use the knowledge in self.mines, self.safes
         and self.moves_made, but should not modify any of those values.
         """
-        possible_cells = []
+        # difference
+        right_moves = list(self.safes - self.moves_made)
 
-        for height in range(8):
-            for width in range(8):
-                move = (height, width)
-                if move not in self.mines and move in self.safes and move not in self.moves_made:
-                    possible_cells.append(move)
-        print("possible cells: " )
-        print(possible_cells)
-        if possible_cells:
-            random_index = random.choice(range(len(possible_cells)))
-            print("safe move")
-            print(possible_cells[random_index])
-            return possible_cells[random_index]
+        if right_moves:
+            # return right_moves[0]
+            return right_moves[random.choice(range(len(right_moves)))]
         else:
             return None
+
+        # sensible_moves = [move for move in self.possible_moves() if move in right_moves]
+        #
+        # if sensible_moves:
+        #     random_index = random.choice(range(len(sensible_moves)))
+        #     print("safe move")
+        #     print(sensible_moves[random_index])
+        #     return sensible_moves[random_index]
+        # else:
+        #     return None
 
     def make_random_move(self):
         """
@@ -325,10 +335,15 @@ class MinesweeperAI:
             1) have not already been chosen, and
             2) are not known to be mines
         """
-        while True:
-            random_height = random.randint(0, 7)
-            random_width = random.randint(0, 7)
-            move = (random_height, random_width)
-            #print(move)
-            if move not in self.moves_made and not move in self.mines:
-                return move
+
+        # union
+        wrong_moves = self.mines | self.moves_made
+        sensible_moves = [move for move in self.possible_moves() if move not in wrong_moves]
+
+        if sensible_moves:
+            random_index = random.choice(range(len(sensible_moves)))
+            print("safe move: ")
+            print(sensible_moves[random_index])
+            return sensible_moves[random_index]
+        else:
+            return None
