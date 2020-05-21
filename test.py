@@ -20,8 +20,10 @@ class MinsweeperTestCases(unittest.TestCase):
 
     def test_moves_made(self):
         tuple_example = (1, 4)
-        self.ai.add_knowledge(tuple_example, 0)
+        self.ai.add_knowledge(tuple_example, 0) # dit werkt niet goed
+
         print(self.ai.moves_made)
+
         self.assertTrue(tuple_example in self.ai.moves_made)
 
     def test_mark_safe(self):
