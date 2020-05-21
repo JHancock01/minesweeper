@@ -44,6 +44,15 @@ class MinsweeperTestCases(unittest.TestCase):
         self.assertTrue(sentence_3 in self.ai.knowledge)
         self.assertTrue((6, 4) in self.ai.mines)
 
+    def test_mark_mine_2(self):
+        sentence_1 = Sentence({(4, 3), (4, 2), (4, 1)}, 1)
+        self.ai.safes = {(1, 3), (3, 0), (2, 1), (1, 6), (3, 7), (0, 3), (2, 5), (2, 4), (1, 2), (3, 3), (4, 4), (1, 5),
+                         (4, 2), (1, 0), (3, 5), (0, 1), (2, 7), (3, 1), (2, 0), (0, 6), (4, 3), (1, 7), (3, 4), (0, 2)}
+        self.ai.knowledge.append(sentence_1)
+        self.ai.update_whats_known()
+
+        self.assertTrue((4,1) in self.ai.mines)
+
     def test_makes_safe_move(self):
         self.ai.mines = {(7, 1), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7), (1, 0), (1, 1), (1, 2), (1, 3),
                          (1, 4), (1, 5), (1, 6), (1, 7), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (2, 7),
