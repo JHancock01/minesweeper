@@ -46,8 +46,8 @@ class MinsweeperTestCases(unittest.TestCase):
 
     def test_mark_mine_2(self):
         sentence_1 = Sentence({(4, 3), (4, 2), (4, 1)}, 1)
-        self.ai.safes = {(1, 3), (3, 0), (2, 1), (1, 6), (3, 7), (0, 3), (2, 5), (2, 4), (1, 2), (3, 3), (4, 4), (1, 5),
-                         (4, 2), (1, 0), (3, 5), (0, 1), (2, 7), (3, 1), (2, 0), (0, 6), (4, 3), (1, 7), (3, 4), (0, 2)}
+        self.ai.safes = {(4, 2),  (4, 3), (1, 3), (3, 0), (2, 1), (1, 6), (3, 7), (0, 3), (2, 5), (2, 4), (1, 2), (3, 3), (4, 4), (1, 5),
+                         (1, 0), (3, 5), (0, 1), (2, 7), (3, 1), (2, 0), (0, 6),(1, 7), (3, 4), (0, 2)}
         self.ai.knowledge.append(sentence_1)
         self.ai.update_whats_known()
 
@@ -173,13 +173,6 @@ class MinsweeperTestCases(unittest.TestCase):
         self.assertTrue(sentence_1.is_literal)
         self.assertTrue(sentence_3.is_empty_set)
 
-    # def test_is_literal(self):
-    #     # pass niet
-    #     sentence_3 = Sentence({(6, 3)}, 0)
-    #     sentence_2 = Sentence({(6, 3), (6, 4)}, 0)
-    #     self.assertTrue(sentence_3.is_literal)
-    #     self.assertFalse(sentence_2.is_literal)
-
     def test_known_mines(self):
         sentence_1 = Sentence({(6, 4), (6, 3)}, 2)
         sentence_2 = Sentence({(5, 4)}, 1)
@@ -209,17 +202,7 @@ class MinsweeperTestCases(unittest.TestCase):
         # self.assertEqual(sentence_3.known_safes, set())
         # self.assertEqual(sentence_4.known_safes, {(6, 4), (6, 3)})
 
-    def test_whats_happening(self):
-        self.ai.knowledge = [Sentence({(5, 1), (6, 1), (6, 3), (6, 2), (4, 2), (4, 1)}, 1),
-                             Sentence({(3, 3), (5, 3)}, 0),
-                             Sentence({(5, 4), (5, 5), (5, 6)}, 0),
-                             Sentence({(3, 2), (5, 4), (3, 3), (5, 2), (4, 2), (5, 3)}, 1),
-                             Sentence({(5, 4), (3, 2), (5, 2), (4, 2)}, 1),
-                             Sentence({(2, 6), (4, 6), (4, 5), (4, 4), (3, 6), (2, 5), (3, 4), (2, 4)}, 0)]
-        self.safes = {(5, 4), (3, 5), (2, 6), (3, 3), (5, 5), (4, 6), (4, 5), (5, 6), (4, 4), (4, 3), (3, 6), (3, 4), (2, 5), (5, 2), (2, 4), (5, 3)}
-
-
-    def test_add_knowledge_88(self):
+    def test_add_knowledge_again(self):
         # given  sentence_1 in knowledge
         sentence_1 = Sentence({(6, 4), (5, 0)}, 1)
         sentence_2 = Sentence({(6, 4)}, 0)
@@ -235,26 +218,6 @@ class MinsweeperTestCases(unittest.TestCase):
         # print(self.ai.knowledge)
         self.assertIn(sentence_3, self.ai.knowledge)
         self.assertIn((5, 0), self.ai.mines)
-
-
-
-
-# possible cells:
-# []
-# No known safe moves, AI making random move.
-# {(4, 6)}
-# New sentence is in add knowledge:
-# {(4, 7), (5, 5), (4, 5), (5, 6), (5, 7), (3, 6), (3, 7), (3, 5)} = 0
-# possible cells:
-# [(3, 5), (3, 6), (3, 7), (4, 5), (4, 7), (5, 5), (5, 6), (5, 7)]
-# safe move
-# (3, 5)
-# AI making safe move.
-# {(4, 6), (3, 5)}
-# New sentence is in add knowledge:
-# {(2, 6), (4, 6), (4, 5), (4, 4), (3, 6), (2, 5), (3, 4), (2, 4)} = 1
-# new knowledge inferred:
-# {(2, 6), (4, 6), (4, 5), (4, 4), (3, 6), (2, 5), (3, 4), (2, 4)} = 1
 
 
 if __name__ == '__main__':

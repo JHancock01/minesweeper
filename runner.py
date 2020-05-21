@@ -218,7 +218,6 @@ while True:
             nearby = game.nearby_mines(move)
             # nearby is the number of mines within one row/one column
             revealed.add(move) # track of revealed cells in runner.py
-            print(revealed)
             ai.add_knowledge(move, nearby)
 
     pygame.display.flip()
