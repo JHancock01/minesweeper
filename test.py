@@ -8,20 +8,10 @@ class MinsweeperTestCases(unittest.TestCase):
 
     def setUp(self):
         self.ai = MinesweeperAI(8, 8)
-        #  initialize a class with only one bomb and not at random, so that I can trace what's happening
-        ms = Minesweeper(8, 8, 8)
-        ms.mines.add((1, 7))
-        ms.board[1][7] = True
-
-        # setje = [(0, 1), (0, 2), (1, 7)]
-        # sentence = Sentence(setje, 1)
-        # known_mines = sentence.known_mines()
-        # print(known_mines)
 
     def test_moves_made(self):
         tuple_example = (1, 4)
-        self.ai.add_knowledge(tuple_example, 0) # dit werkt niet goed
-
+        self.ai.add_knowledge(tuple_example, 0)
         print(self.ai.moves_made)
 
         self.assertTrue(tuple_example in self.ai.moves_made)
@@ -73,10 +63,6 @@ class MinsweeperTestCases(unittest.TestCase):
 
     # given {a,b,c} = X in knowledge en {c} = X then add {a,b} = 0 to knowledge
     def test_add_knowledge_1(self):
-        # this works because of sentence.mark_mine().
-        # sentence_1 and sentence_3 are the same sentence where
-        # (6,4) has been removed and count decreased
-        # Sweet!
 
         # given  sentence_1 in knowledge
         sentence_1 = Sentence({(6, 4), (6, 3), (7, 4), (6, 2), (7, 2)}, 1)
@@ -110,7 +96,6 @@ class MinsweeperTestCases(unittest.TestCase):
     # given a set {a,b} = X and {a,b,c,d} = Y add set {c,d} = Y - X
     def test_add_knowledge_3(self):
         # the resolved sentence (_2) is a superset of sentence in knowledge (_1)
-
         # given  sentence_1 in knowledge
         sentence_1 = Sentence({(6, 4), (6, 3)}, 1)
         self.ai.knowledge.append(sentence_1)
@@ -146,7 +131,7 @@ class MinsweeperTestCases(unittest.TestCase):
         sentence_1 = Sentence({(6, 4), (6, 3), (7, 4)}, 0)
 
         # sentence_0
-        sentence_2 = Sentence({(6, 4), (5, 4), (5, 3)}, 2)  # program makes sentence (4,6)=0 , ????
+        sentence_2 = Sentence({(6, 4), (5, 4), (5, 3)}, 2)
         self.ai.knowledge.append(sentence_2)
 
         # self.ai.knowledge.append(sentence)
@@ -194,13 +179,6 @@ class MinsweeperTestCases(unittest.TestCase):
 
         self.ai.resolve(sentence_2)
         print(self.ai.safes)
-        # self.assertIn((6, 3), self.ai.safes)
-
-        #
-        # self.assertEqual(sentence_1.known_safes, set())
-        # self.assertEqual(sentence_2.known_safes, {(6, 3)})
-        # self.assertEqual(sentence_3.known_safes, set())
-        # self.assertEqual(sentence_4.known_safes, {(6, 4), (6, 3)})
 
     def test_add_knowledge_again(self):
         # given  sentence_1 in knowledge

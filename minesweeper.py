@@ -115,7 +115,6 @@ class Sentence:
         """
         Returns the set of all cells in self.cells known to be mines.
         """
-        # @Marleen is this correct or do I have to check the set mines
         if self.count == len(self.cells):
             return self.cells
         else:
